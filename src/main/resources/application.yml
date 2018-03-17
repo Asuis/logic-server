@@ -1,0 +1,43 @@
+spring:
+  application:
+    name: logic-server
+  datasource:
+      url: jdbc:mysql://sh-cdb-pfz0ikp9.sql.tencentcdb.com:63434/real
+      username: root
+      password: HJcgk2QTT57t
+      driver-class-name: com.mysql.jdbc.Driver
+       # Druid 配置
+      druid:
+        # 连接池配置
+        initial-size: 1
+        max-active: 20
+        max-wait: 60000
+        min-idle: 1
+        time-between-eviction-runs-millis: 60000
+        min-evictable-idle-time-millis: 300000
+        validation-query: select 'x'
+        test-while-idle: true
+        test-on-borrow: false
+        test-on-return: false
+        pool-prepared-statements: true
+        max-open-prepared-statements: 20
+        max-pool-prepared-statement-per-connection-size: 20
+        filters: stat
+  cloud:
+      consul:
+        host: localhost
+        port: 8500
+        discovery:
+          health-check-interval: 15s
+          tags: logic-server
+          instanceId: ${spring.application.name}:${vcap.application.instance_id:${spring.application.instance_id:${random.value}}}
+  servlet:
+    multipart:
+      max-file-size: 3072KB
+      max-request-size: 3072KB
+mybatis:
+  type-aliases-package: com.real.logicserver.meeting.model,com.real.logicserver.price.model,com.real.logicserver.quiz,com.real.logicserver.social.model,com.real.logicserver.vote.model
+  mapper-locations: classpath:mapper/*.xml
+  config-location: classpath:mybatis-cfg.xml
+server:
+  port: 8080
