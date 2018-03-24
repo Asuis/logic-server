@@ -1,5 +1,6 @@
 package com.real.logicserver;
 
+import com.real.logicserver.meeting.repository.MeetingMapper;
 import com.real.logicserver.meeting.service.StorageService;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -10,6 +11,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+
+import javax.annotation.Resource;
 
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -22,6 +25,7 @@ import java.util.stream.Stream;
 @SpringBootTest
 @AutoConfigureMockMvc
 public class MvcController {
+
     @Autowired
     private MockMvc mvc;
 
