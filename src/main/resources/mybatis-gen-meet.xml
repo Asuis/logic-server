@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd" >
 <generatorConfiguration>
     <!-- !!!! Driver Class Path !!!! -->
-    <classPathEntry location="/media/asuis/tools/maven-repository/mysql/mysql-connector-java/5.1.45/mysql-connector-java-5.1.45.jar"/>
+    <classPathEntry location="D:/Wechat/maven_jar/mysql/mysql-connector-java/5.1.45/mysql-connector-java-5.1.45.jar"/>
 
     <context id="context" targetRuntime="MyBatis3">
         <commentGenerator>
@@ -20,18 +20,18 @@
         </javaTypeResolver>
 
         <!-- !!!! Model Configurations !!!! -->
-        <javaModelGenerator targetPackage="com.real.logicserver.meeting.model" targetProject="com/real/logicserver">
+        <javaModelGenerator targetPackage="com.real.logicserver.meeting.model" targetProject="logic-server">
             <property name="enableSubPackages" value="false"/>
             <property name="trimStrings" value="true"/>
         </javaModelGenerator>
 
         <!-- !!!! Mapper XML Configurations !!!! -->
-        <sqlMapGenerator targetPackage="mapper" targetProject="mapper">
+        <sqlMapGenerator targetPackage="mapper" targetProject="logic-server">
             <property name="enableSubPackages" value="false"/>
         </sqlMapGenerator>
 
         <!-- !!!! Mapper Interface Configurations !!!! -->
-        <javaClientGenerator targetPackage="com.real.logicserver.meeting.repository" targetProject="com/real/logicserver/" type="XMLMAPPER">
+        <javaClientGenerator targetPackage="com.real.logicserver.meeting.repository" targetProject="logic-server" type="XMLMAPPER">
             <property name="enableSubPackages" value="false"/>
         </javaClientGenerator>
 
@@ -56,6 +56,9 @@
         </table>
         <table schema="real" tableName="meeting_user" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false" enableUpdateByExample="false">
             <generatedKey column="meeting_user_id" sqlStatement="MySql"/>
+        </table>
+        <table schema="real" tableName="meeting_type" enableCountByExample="false" enableDeleteByExample="false" enableSelectByExample="false" enableUpdateByExample="false">
+            <generatedKey column="meeting_type_id" sqlStatement="MySql"/>
         </table>
 
 
