@@ -1,4 +1,4 @@
-package com.real.logicserver.meeting.repository;
+package com.real.logicserver.quiz.repository;
 
 import com.real.logicserver.meeting.model.MeetingType;
 

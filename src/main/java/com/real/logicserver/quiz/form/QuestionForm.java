@@ -1,11 +1,9 @@
 package com.real.logicserver.quiz.form;
 
-import lombok.Data;
-
 /**
  * @author asuis
  */
-@Data
-public class InputQuizForm {
+public class QuestionForm {
     private String title;
+
 }

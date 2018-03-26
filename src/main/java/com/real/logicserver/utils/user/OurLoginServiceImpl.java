@@ -59,8 +59,6 @@ public class OurLoginServiceImpl implements OurLoginService {
     public Result<PcLoginResult> pcLogin(HttpServletRequest request) {
         String sid = request.getParameter("sid");
         String token = request.getParameter("token");
-        if (sid!=null&&token!=null) {
-        }
         return null;
     }
 
