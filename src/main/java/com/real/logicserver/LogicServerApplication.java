@@ -15,4 +15,7 @@ public class LogicServerApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(LogicServerApplication.class, args);
 	}
+
+	
+	
 }

@@ -7,12 +7,17 @@ import com.real.logicserver.meeting.dto.MeetingHistoryQuery;
 import com.real.logicserver.meeting.dto.MeetingSimpleInfo;
 import com.real.logicserver.meeting.dto.SimpleUserInfo;
 import com.real.logicserver.meeting.form.MeetingForm;
+import com.real.logicserver.meeting.form.MeetingSignedMembers;
 import com.real.logicserver.meeting.form.MeetingUpdate;
 import com.real.logicserver.meeting.form.MeetingCreate;
 import com.real.logicserver.meeting.form.MeetingDelete;
+import com.real.logicserver.meeting.model.Meeting;
+import com.real.logicserver.meeting.model.MeetingSigned;
+import com.real.logicserver.meeting.model.MeetingUser;
 import com.real.logicserver.meeting.model.UploadResult;
 import com.real.logicserver.meeting.query.MeetingQuery;
 import com.real.logicserver.meeting.valitor.LogoFileValitor;
+import com.real.logicserver.utils.user.model.OurUserInfo;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParams;
@@ -34,6 +39,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.List;
 
 /**
  * @author asuis
@@ -44,7 +50,8 @@ import java.nio.file.Paths;
 @Slf4j
 public class MeetingController {
 
-	
+	 @Autowired
+	 com.real.logicserver.utils.user.OurLoginService ourLoginService;
 	
 	 @Autowired
 	 com.real.logicserver.meeting.service.MeetingCreateService meetingCreatService;
@@ -54,6 +61,16 @@ public class MeetingController {
 	 
 	 @Autowired
 	 com.real.logicserver.meeting.service.MeetingUpdateService meetingUpdateService;
+	 
+	 @Autowired
+	 com.real.logicserver.meeting.service.MeetingSearchService meetingSearchService;
+	 
+	 @Autowired
+	 com.real.logicserver.meeting.service.MeetingMemberService meetingMemberService;
+	 
+	 @Autowired
+	 com.real.logicserver.meeting.service.MeetingHistoryService meetingHistoryService;
+	 
 	
 	 private static final Logger log = LoggerFactory.getLogger(MeetingController.class);
 	 
@@ -108,8 +125,9 @@ public class MeetingController {
      */   
     @PostMapping("/create")
     @ApiOperation("创建会议")
-    public Result<MeetingCreate> createMeeting(@RequestBody MeetingCreate meetingCreate){
-    	Integer userId = 2;
+    public Result<MeetingCreate> createMeeting(@RequestBody MeetingCreate meetingCreate,HttpServletRequest request){
+    	
+    	Integer userId = ourLoginService.wxCheck(request).getUserId();
     	
     	meetingCreate.setUserId(userId);
     	boolean accept = meetingCreatService.meetingCreate(meetingCreate);
@@ -168,11 +186,18 @@ public class MeetingController {
      * 查询公开会议
      * 提供邀请码搜索
      * */
-    @GetMapping("/search")
+    @PostMapping("/search")
     @ApiOperation("查找会议")
-    public Result<String> searchMeeting(@RequestBody MeetingQuery meetingQuery){
-        return null;
+    public Result<Meeting> searchMeeting(@RequestBody MeetingQuery meetingQuery){
+    	System.out.println("!");
+    	Meeting meeting = meetingSearchService.meetingSearch(meetingQuery);
+    	if(meeting!=null) {
+    		 return new Result<>(ResultCode.SUCC,meeting,"search successful");  	
+    	}	
+    	else return new Result<>(ResultCode.FAIL,null,"search fail");  	
+    	
     }
+    
     /**
      * 获取当前用户会议历史
      * 已参加的会议
@@ -182,43 +207,80 @@ public class MeetingController {
      * */
     @GetMapping("/his")
     @ApiOperation("查询个人会议历史")
-    public Result<PageInfo<MeetingSimpleInfo>> getMeetingHistory(@RequestBody MeetingHistoryQuery historyQuery, @RequestParam(value = "query",required = false) String query){
-        return null;
+    public Result<List<MeetingUser>> getMeetingHistory(HttpServletRequest request){
+        
+    	OurUserInfo userInfo = ourLoginService.wxCheck(request);
+    	Integer userId = null;
+    	if(userInfo==null) {
+    		return new Result<>(ResultCode.FAIL,null,"search fail");  	
+    	}
+    	else {
+    		userId = userInfo.getUserId();
+    		List<MeetingUser> list = meetingHistoryService.getMeetingHistory(userId);
+    		if(list == null) {
+    			return new Result<>(ResultCode.FAIL,null,"no meetings"); 
+    		}
+    		else {
+    			 return new Result<>(ResultCode.SUCC,list,"search successful");
+    		}
+    	}
+
     }
+    
     /**
      * 获取会议成员(当前已报名的会议成员)
      * */
     @GetMapping("/member/get/{mid}")
     @ApiOperation("获取会议成员(当前已报名的会议成员)")
-    public Result<PageInfo<SimpleUserInfo>> getMeetingMembers(@PathVariable("mid") Integer mid){
-        return null;
+    public Result<List<MeetingUser>> getMeetingMembers(@PathVariable("mid") Integer mid){
+    	
+    	List<MeetingUser> memberList = meetingMemberService.getMeetingMembers(mid);
+    	if(memberList==null) {
+    		return new Result<>(ResultCode.FAIL,null,"search fail");  	
+    	}
+    	else {
+    		return new Result<>(ResultCode.SUCC,memberList,"search successful");  	
+    	}
+       
     }
+    
     /**
      * 获取会议报名表
      * */
     @GetMapping("/sign/get/{mid}")
     @ApiOperation("获取会议进行中，签到的人选")
-    public Result getSignUpList(@PathVariable("mid") Integer mid){
-        return null;
+    public Result<List<MeetingSignedMembers>> getSignUpList(@PathVariable("mid") Integer mid){
+    	
+    	List<MeetingSignedMembers> signedList = meetingMemberService.getMeetingSignMembers(mid);
+    	if(signedList==null) {
+    		return new Result<>(ResultCode.FAIL,null,"search fail");  	
+    	}
+    	else {
+    		return new Result<>(ResultCode.SUCC,signedList,"search successful");
+    	}
+
     }
 
     /**
      * 签到会议
      * 扫描二维码签到
      * */
+    
     @PostMapping("/signup/{mid}")
     @ApiOperation("签到会议")
-    public Result signUpMeeting(@PathVariable("mid")Integer mid,HttpServletRequest request,HttpServletResponse response){
-        return null;
+    public Result<MeetingSigned> signUpMeeting(@PathVariable("mid")Integer mid,HttpServletRequest request,HttpServletResponse response){
+    	
+        Integer userId = 2;
+        MeetingSigned meetingSigned = meetingMemberService.meetingSigned(mid, userId);
+    	
+        if(meetingSigned==null) {
+        	return new Result<>(ResultCode.FAIL,null,"signed fail");  	
+        }
+        else {
+        	return new Result<>(ResultCode.SUCC,meetingSigned,"signed successful");
+        }
     }
-    /**
-     * 展示当前会议签到人员信息
-     * */
-    @GetMapping("/sign/list/{mid}")
-    @ApiOperation("展示会议签到人员信息")
-    public Result<PageInfo<SimpleUserInfo>> getSignMembersMessage(@PathVariable("mid")Integer mid) {
-        return null;
-    }
+
     /**
      * 获得会议邀请码
      * */

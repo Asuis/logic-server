@@ -1,8 +1,11 @@
 package com.real.logicserver.social.friend;
 
 import com.real.logicserver.dto.Result;
+import com.real.logicserver.dto.ResultCode;
 import com.real.logicserver.social.friend.form.InviteFriendForm;
 import io.swagger.annotations.Api;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 /**
@@ -12,19 +15,53 @@ import org.springframework.web.bind.annotation.*;
 @Api("好友添加相关Api")
 @RequestMapping("/v1/fri")
 public class FriendController {
+	
+	@Autowired
+	com.real.logicserver.social.friend.service.FriendService friendService;
+	
+	@Autowired
+	com.real.logicserver.social.service.SocialService socialService;
+	
     /**
      * 添加好友
      * */
-    @PostMapping("/add/{type}/{uid}")
-    public Result addFriend(@PathVariable("type") String type,@PathVariable("uid") String uid) {
-        return null;
+    @PostMapping("/add/{uid}/{fid}")
+    public Result<Boolean> addFriend(@PathVariable("uid") String uid,@PathVariable("fid") String fid) {
+    	boolean ac = socialService.addFriend(Integer.valueOf(uid), Integer.valueOf(fid));
+    	if(ac) {
+    		return  new Result<>(ResultCode.SUCC,ac,"add success");
+    	}
+    	else {
+    		return  new Result<>(ResultCode.SUCC,ac,"add fail");
+    	}
     }
+    
+    /**
+     * 同意/拒绝添加好友
+     * */
+    @PostMapping("/review/{type}/{mid}/{uid}/{fid}")
+    public Result<Boolean> reviewFriend(@PathVariable("type") String type,@PathVariable("mid") String mid,@PathVariable("uid") String uid,@PathVariable("fid") String fid) {
+    	boolean ac = socialService.reviewFriend(Integer.valueOf(mid), type, uid, fid);
+    	if(ac) {
+    		return  new Result<>(ResultCode.SUCC,ac,"review success");
+    	}
+    	else {
+    		return  new Result<>(ResultCode.SUCC,ac,"review fail");
+    	}
+    }
+    
     /**
      * 删除好友
      * */
-    @DeleteMapping("/del/{type}/{uid}")
-    public Result removerFriend(@PathVariable("type") String type,@PathVariable("uid") String uid) {
-        return null;
+    @DeleteMapping("/del/{uid}/{fid}")
+    public Result removerFriend(@PathVariable("uid") String uid,@PathVariable("fid") String fid) {
+    	boolean ac = socialService.removeFriend(uid, fid);
+    	if(ac) {
+    		return  new Result<>(ResultCode.SUCC,ac,"remove success");
+    	}
+    	else {
+    		return  new Result<>(ResultCode.SUCC,ac,"remove fail");
+    	}
     }
     /**
      * 添加好友备注
