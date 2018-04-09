@@ -2,6 +2,7 @@ package com.real.logicserver.quiz.model.mongo;
 
 import org.bson.BSON;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.Date;
 import java.util.List;
@@ -9,9 +10,43 @@ import java.util.List;
 /**
  * @author asuis
  */
+@Document
 public class Questions {
     @Id
-    private BSON _id;
-    private List<Question> questions;
+    private String _id;
+    private String title;
+    private List<AbstractQuestion> questions;
     private Date date;
+
+    public String get_id() {
+        return _id;
+    }
+
+    public void set_id(String _id) {
+        this._id = _id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public List<AbstractQuestion> getQuestions() {
+        return questions;
+    }
+
+    public void setQuestions(List<AbstractQuestion> questions) {
+        this.questions = questions;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
+    }
 }

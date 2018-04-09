@@ -12,7 +12,6 @@ import com.real.logicserver.meeting.form.MeetingCreate;
 import com.real.logicserver.meeting.repository.MeetingMapper;
 import com.real.logicserver.meeting.repository.MeetingUserMapper;
 
-
 @Service
 public class MeetingCreateServiceImpl implements MeetingCreateService  {
 

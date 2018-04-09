@@ -41,7 +41,6 @@ import java.nio.file.Paths;
 @RestController
 @Api("会议相关接口")
 @RequestMapping("/v1/m")
-@Slf4j
 public class MeetingController {
 
 	
@@ -73,7 +72,6 @@ public class MeetingController {
     		return  new Result<>(ResultCode.FAIL,null,"Please select a file to upload");
     	}
     	
-    	//
     	UploadResult uploadResult = new UploadResult();
         if (file.isEmpty()) {
             return new Result<>(ResultCode.FAIL,null,"Please select a file to upload");

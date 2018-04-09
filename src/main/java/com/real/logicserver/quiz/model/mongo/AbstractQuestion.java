@@ -9,4 +9,12 @@ import org.springframework.data.mongodb.core.mapping.Document;
 public abstract class AbstractQuestion {
     protected String title;
     protected String type;
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getTitle() {
+        return title;
+    }
 }

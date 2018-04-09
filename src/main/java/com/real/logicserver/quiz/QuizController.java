@@ -5,6 +5,8 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * @author asuis
  * 调查问卷模块
@@ -17,7 +19,7 @@ public class QuizController {
 
     @PostMapping("/create")
     @ApiOperation("创建调查问卷")
-    public Result createQuiz(){
+    public Result createQuiz(HttpServletRequest request,@RequestBody ){
         return null;
     }
     /**
