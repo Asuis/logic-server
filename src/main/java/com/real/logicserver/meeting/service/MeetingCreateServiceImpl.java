@@ -27,12 +27,14 @@ public class MeetingCreateServiceImpl implements MeetingCreateService  {
 			Meeting meeting = new Meeting();
 			meeting.setTypeId(meetingCreate.getType());
 			meetingMapper.insertSelective(meeting);
+			
 			int meetingId = meeting.getMeId();		
 			
 			MeetingUser meetingUser = new MeetingUser();
 			meetingUser.setCreateTime(new Date(System.currentTimeMillis()));
 			meetingUser.setUserId(meetingCreate.getUserId());		
 			meetingUser.setMeId(meetingId);
+			
 			meetingUserMapper.insertSelective(meetingUser);	
 		}
 		catch(Exception e) {

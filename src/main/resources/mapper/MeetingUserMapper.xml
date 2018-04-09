@@ -18,6 +18,21 @@
     -->
     meeting_user_id, me_id, user_id, create_time
   </sql>
+  
+  <select id="getMeetingHistory" parameterType="java.lang.Integer" resultType="com.real.logicserver.meeting.model.MeetingUser">
+     select 
+     *
+     from meeting_user
+     where user_id = #{userId,jdbcType=INTEGER}
+  </select>
+  
+  <select id="getMeetingMembers" parameterType="java.lang.Integer" resultType="com.real.logicserver.meeting.model.MeetingUser">
+     select 
+     *
+     from meeting_user
+     where me_id = #{meetingId,jdbcType=INTEGER}
+  </select>
+  
   <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
     <!--
       WARNING - @mbg.generated
