@@ -10,6 +10,9 @@ import com.real.logicserver.meeting.form.MeetingUpdate;
 import com.real.logicserver.meeting.model.Meeting;
 import com.real.logicserver.meeting.repository.MeetingMapper;
 
+/**
+ * @author asuis
+ */
 @Service
 public class MeetingUpdateServiceImpl implements MeetingUpdateService {
 
@@ -20,18 +23,36 @@ public class MeetingUpdateServiceImpl implements MeetingUpdateService {
 	public boolean meetingUpdate(MeetingUpdate meetingUpdate) {
 		try {
 			Meeting meeting = new Meeting();
-			if(meetingUpdate.getMeetingId()!=null)meeting.setMeId(meetingUpdate.getMeetingId());
-			else return false;
-			if(meetingUpdate.getDesc()!=null)meeting.setDesc(meetingUpdate.getDesc());
-			else return false;
-			if(meetingUpdate.getEndTime()!=null)meeting.setEndTime(meetingUpdate.getEndTime());
-			else return false;
-			if(meetingUpdate.getStarTime()!=null)meeting.setEndTime(meetingUpdate.getStarTime());
-			else return false;
-			if(meetingUpdate.getPlace()!=null)meeting.setPlace(meetingUpdate.getPlace());
-			else return false;
-			if(meetingUpdate.getTitle()!=null)meeting.setTitle(meetingUpdate.getTitle());
-			else return false;
+			if(meetingUpdate.getMeetingId()!=null) {
+				meeting.setMeId(meetingUpdate.getMeetingId());
+			} else {
+				return false;
+			}
+			if(meetingUpdate.getDesc()!=null) {
+				meeting.setDesc(meetingUpdate.getDesc());
+			} else {
+				return false;
+			}
+			if(meetingUpdate.getEndTime()!=null) {
+				meeting.setEndTime(meetingUpdate.getEndTime());
+			} else {
+				return false;
+			}
+			if(meetingUpdate.getStarTime()!=null) {
+				meeting.setEndTime(meetingUpdate.getStarTime());
+			} else {
+				return false;
+			}
+			if(meetingUpdate.getPlace()!=null) {
+				meeting.setPlace(meetingUpdate.getPlace());
+			} else {
+				return false;
+			}
+			if(meetingUpdate.getTitle()!=null) {
+				meeting.setTitle(meetingUpdate.getTitle());
+			} else {
+				return false;
+			}
 			System.out.println(meeting.getMeId()+"!"+meeting.getDesc());
 			meetingMapper.updateByPrimaryKeySelective(meeting);		
 			System.out.println(meeting.getMeId()+"!"+meeting.getDesc());

@@ -46,22 +46,25 @@ public class MeetingMemberServiceImpl implements MeetingMemberService {
 		HashMap<Integer,MeetingSigned> map = new HashMap<Integer,MeetingSigned>();
 		List<MeetingUser> list2 = meetingUserMapper.getMeetingMembers(meetingId);
 		List<MeetingSignedMembers> list = new ArrayList<MeetingSignedMembers>();
-		for(int n=0;n<list1.size();n++) {
-			map.put(list1.get(n).getUserId(), list1.get(n));
+		for (MeetingSigned aList1 : list1) {
+			map.put(aList1.getUserId(), aList1);
 		}
-		
-		for(int n=0;n<list2.size();n++) {
+
+		for (MeetingUser aList2 : list2) {
 			MeetingSignedMembers meetingSignedMembers = new MeetingSignedMembers();
-			meetingSignedMembers.setUserId(list2.get(n).getUserId());
-			if(map.containsKey(list2.get(n).getUserId())) {
+			meetingSignedMembers.setUserId(aList2.getUserId());
+			if (map.containsKey(aList2.getUserId())) {
 				meetingSignedMembers.setSigned(true);
-				meetingSignedMembers.setSignedPlace(map.get(list2.get(n).getUserId()).getPlace());
-				meetingSignedMembers.setSignedTime(map.get(list2.get(n).getUserId()).getSignedTime());
+				meetingSignedMembers.setSignedPlace(map.get(aList2.getUserId()).getPlace());
+				meetingSignedMembers.setSignedTime(map.get(aList2.getUserId()).getSignedTime());
+			} else {
+				meetingSignedMembers.setSigned(false);
 			}
-			else meetingSignedMembers.setSigned(false);	
-			
-			if(list2.get(n).getStatus()==0)continue;
-			
+
+			if (aList2.getStatus() == 0) {
+				continue;
+			}
+
 			list.add(meetingSignedMembers);
 		}		
 		
@@ -75,7 +78,7 @@ public class MeetingMemberServiceImpl implements MeetingMemberService {
 		List<MeetingUser> list = meetingUserMapper.getMeetingMembers(meetingId);
 		boolean userYes = false;
 		for(int n=0;n<list.size();n++) {
-			if(list.get(n).getUserId()==userId) {
+			if(list.get(n).getUserId().equals(userId)) {
 				userYes = true;
 				break;
 			}
@@ -83,7 +86,7 @@ public class MeetingMemberServiceImpl implements MeetingMemberService {
 		//已签到
 		List<MeetingSigned> list2 = meetingSignedMapper.getMeetingSignedMembers(meetingId);
 		for(int n=0;n<list2.size();n++) {
-			if(list.get(n).getUserId()==userId) {
+			if(list.get(n).getUserId().equals(userId)) {
 				userYes = false;
 				break;
 			}
@@ -93,12 +96,11 @@ public class MeetingMemberServiceImpl implements MeetingMemberService {
 			meetingSigned.setMeetingId(meetingId);
 			meetingSigned.setPlace("地点");
 			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
-	        String strTime = String.valueOf(new Date().getTime());
+	        String strTime = String.valueOf(new Date(System.currentTimeMillis()));
 	        Date date = null;
 			try {
 				date = format.parse(strTime);
 			} catch (ParseException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}    	        
 			meetingSigned.setSignedTime(date);
@@ -109,7 +111,5 @@ public class MeetingMemberServiceImpl implements MeetingMemberService {
 		else {
 			return null;
 		}
-		
-		
 	}
 }

@@ -19,7 +19,7 @@ public class MeetingSearchServiceImpl implements MeetingSearchService {
 	
 	@Override
 	public Meeting meetingSearch(MeetingQuery meetingQuery) {
-		Meeting res = new Meeting();
+		Meeting res = null;
 		try {			
 			
 			res = meetingMapper.selectByPrimaryKey(Integer.valueOf(meetingQuery.getQuery()));
