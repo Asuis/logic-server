@@ -1,6 +1,7 @@
 package com.real.logicserver;
 
 import com.real.logicserver.quiz.model.mongo.Questions;
+import com.real.logicserver.quiz.model.mongo.SingleSelectQuestion;
 import com.real.logicserver.quiz.repository.mongo.QuestionsRepository;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,6 +23,9 @@ public class MongoTest {
         Questions questions = new Questions();
         questions.setDate(new Date(System.currentTimeMillis()));
         questions.setTitle("question");
+        SingleSelectQuestion singleSelectQuestion = new SingleSelectQuestion();
+        singleSelectQuestion.setTitle("question");
+
         questionsRepository.save(questions);
         String str = questions.get_id();
         System.out.println(str);
