@@ -17,6 +17,12 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping("/v1/p")
 @Api("金额交易相关系统")
 public class PriceController {
+
+    @PostMapping("/payment/notice")
+    public Result paymentNotice() {
+        return null;
+    }
+
     /**
      * 抢红包
      * 需进行身份校验
@@ -29,7 +35,7 @@ public class PriceController {
     /**
      * 创建红包
      * */
-    @PostMapping(value = "/create/")
+    @PostMapping(value = "/create")
     public Result createRedPaper(@RequestBody RedPaperForm redPaperForm) {
         return null;
     }

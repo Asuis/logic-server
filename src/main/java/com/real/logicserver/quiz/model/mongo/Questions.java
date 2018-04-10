@@ -17,6 +17,7 @@ public class Questions {
     private String title;
     private List<AbstractQuestion> questions;
     private Date date;
+    private boolean isDraft;
 
     public String get_id() {
         return _id;
@@ -48,5 +49,12 @@ public class Questions {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+    public boolean isDraft() {
+        return isDraft;
+    }
+
+    public void setDraft(boolean draft) {
+        isDraft = draft;
     }
 }

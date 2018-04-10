@@ -8,10 +8,17 @@ import java.util.Date;
 /**
  * @author asuis
  */
-public class SingleSelectAnswer {
+public class SingleSelectAnswer extends AbstractAnswer {
     private String serialNumber;
     private Date time;
     private SimpleUserInfo simpleUserInfo;
+
+    public SingleSelectAnswer(String serialNumber, SimpleUserInfo simpleUserInfo) {
+        setType(AnswerType.SINGLE_SELECT_ANSWER);
+        this.serialNumber = serialNumber;
+        this.time = new Date(System.currentTimeMillis());
+        this.simpleUserInfo = simpleUserInfo;
+    }
 
     public String getSerialNumber() {
         return serialNumber;
