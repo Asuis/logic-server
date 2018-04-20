@@ -1,11 +1,15 @@
 package com.real.logicserver.meeting.form;
 
+import com.alibaba.fastjson.annotation.JSONField;
+
 import java.util.Date;
 
 public class MeetingUpdate {
 	private Integer userId;
 	private Integer meetingId;
-	private Date starTime;
+	@JSONField(format="yyyy-MM-dd HH:mm")
+	private Date startTime;
+	@JSONField(format="yyyy-MM-dd HH:mm")
 	private Date endTime;
 	private String place;
 	private String desc;
@@ -23,11 +27,11 @@ public class MeetingUpdate {
 	public void setMeetingId(Integer meetingId) {
 		this.meetingId = meetingId;
 	}
-	public Date getStarTime() {
-		return starTime;
+	public Date getStartTime() {
+		return startTime;
 	}
-	public void setStarTime(Date starTime) {
-		this.starTime = starTime;
+	public void setStartTime(Date starTime) {
+		this.startTime = starTime;
 	}
 	public Date getEndTime() {
 		return endTime;

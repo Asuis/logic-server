@@ -1,9 +1,11 @@
 package com.real.logicserver.price;
 
 import com.real.logicserver.dto.Result;
+import com.real.logicserver.price.api.PayApi;
 import com.real.logicserver.price.form.RedPaperForm;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,6 +19,15 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping("/v1/p")
 @Api("金额交易相关系统")
 public class PriceController {
+
+//    @Autowired
+//    private PayApi payApi;
+
+    @PostMapping("/payment/notice")
+    public Result paymentNotice(@RequestBody String str) {
+        return null;
+    }
+
     /**
      * 抢红包
      * 需进行身份校验
@@ -29,7 +40,7 @@ public class PriceController {
     /**
      * 创建红包
      * */
-    @PostMapping(value = "/create/")
+    @PostMapping(value = "/create")
     public Result createRedPaper(@RequestBody RedPaperForm redPaperForm) {
         return null;
     }

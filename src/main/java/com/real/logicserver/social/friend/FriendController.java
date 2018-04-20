@@ -29,10 +29,10 @@ public class FriendController {
     public Result<Boolean> addFriend(@PathVariable("uid") String uid,@PathVariable("fid") String fid) {
     	boolean ac = socialService.addFriend(Integer.valueOf(uid), Integer.valueOf(fid));
     	if(ac) {
-    		return  new Result<>(ResultCode.SUCC,ac,"add success");
+    		return  new Result<>(ResultCode.SUCC,null,"add success");
     	}
     	else {
-    		return  new Result<>(ResultCode.SUCC,ac,"add fail");
+    		return  new Result<>(ResultCode.SUCC,null,"add fail");
     	}
     }
     
@@ -43,10 +43,10 @@ public class FriendController {
     public Result<Boolean> reviewFriend(@PathVariable("type") String type,@PathVariable("mid") String mid,@PathVariable("uid") String uid,@PathVariable("fid") String fid) {
     	boolean ac = socialService.reviewFriend(Integer.valueOf(mid), type, uid, fid);
     	if(ac) {
-    		return  new Result<>(ResultCode.SUCC,ac,"review success");
+    		return  new Result<>(ResultCode.SUCC,null,"review success");
     	}
     	else {
-    		return  new Result<>(ResultCode.SUCC,ac,"review fail");
+    		return  new Result<>(ResultCode.SUCC,null,"review fail");
     	}
     }
     
@@ -57,10 +57,10 @@ public class FriendController {
     public Result removerFriend(@PathVariable("uid") String uid,@PathVariable("fid") String fid) {
     	boolean ac = socialService.removeFriend(uid, fid);
     	if(ac) {
-    		return  new Result<>(ResultCode.SUCC,ac,"remove success");
+    		return  new Result<>(ResultCode.SUCC,null,"remove success");
     	}
     	else {
-    		return  new Result<>(ResultCode.SUCC,ac,"remove fail");
+    		return  new Result<>(ResultCode.SUCC,null,"remove fail");
     	}
     }
     /**

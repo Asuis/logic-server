@@ -16,9 +16,13 @@ import com.real.logicserver.meeting.repository.MeetingMapper;
 @Service
 public class MeetingUpdateServiceImpl implements MeetingUpdateService {
 
+	private final MeetingMapper meetingMapper;
+
 	@Autowired
-	private MeetingMapper meetingMapper;
-	
+	public MeetingUpdateServiceImpl(MeetingMapper meetingMapper) {
+		this.meetingMapper = meetingMapper;
+	}
+
 	@Override
 	public boolean meetingUpdate(MeetingUpdate meetingUpdate) {
 		try {
@@ -38,8 +42,8 @@ public class MeetingUpdateServiceImpl implements MeetingUpdateService {
 			} else {
 				return false;
 			}
-			if(meetingUpdate.getStarTime()!=null) {
-				meeting.setEndTime(meetingUpdate.getStarTime());
+			if(meetingUpdate.getStartTime()!=null) {
+				meeting.setEndTime(meetingUpdate.getStartTime());
 			} else {
 				return false;
 			}
@@ -53,6 +57,7 @@ public class MeetingUpdateServiceImpl implements MeetingUpdateService {
 			} else {
 				return false;
 			}
+			//todo 处理反馈信息
 			System.out.println(meeting.getMeId()+"!"+meeting.getDesc());
 			meetingMapper.updateByPrimaryKeySelective(meeting);		
 			System.out.println(meeting.getMeId()+"!"+meeting.getDesc());

@@ -2,9 +2,7 @@ package com.real.logicserver.utils.user;
 
 import com.alibaba.fastjson.JSON;
 import com.real.logicserver.dto.Result;
-import com.real.logicserver.utils.user.model.LoginResult;
-import com.real.logicserver.utils.user.model.OurUserInfo;
-import com.real.logicserver.utils.user.model.PcLoginResult;
+import com.real.logicserver.utils.user.model.*;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
@@ -13,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Enumeration;
 
 /**
  * @author asuis
@@ -21,9 +20,13 @@ import javax.servlet.http.HttpServletRequest;
 public class OurLoginServiceImpl implements OurLoginService {
 
     private static final Logger log = org.slf4j.LoggerFactory.getLogger(OurLoginServiceImpl.class);
+
+    private final RestTemplate restTemplate;
+
     @Autowired
-    @LoadBalanced
-    private RestTemplate restTemplate;
+    public OurLoginServiceImpl(@LoadBalanced RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
+    }
 
     @Override
     public String login(HttpServletRequest request) {
@@ -71,7 +74,7 @@ public class OurLoginServiceImpl implements OurLoginService {
             headers.add("Authorization",auth);
             Result<OurUserInfo> result = null;
             ResponseEntity<Result> resultResponseEntity = null;
-            HttpEntity<String> httpEntity = new HttpEntity<>(null, headers);
+            HttpEntity<String> httpEntity = new HttpEntity<>("", headers);
             try {
                 resultResponseEntity = restTemplate.exchange("http://user-server/pc/check",HttpMethod.GET,httpEntity,Result.class);
             } catch (Exception e) {
@@ -90,23 +93,26 @@ public class OurLoginServiceImpl implements OurLoginService {
 
     @Override
     public OurUserInfo wxCheck(HttpServletRequest request) {
+
         OurUserInfo ourUserInfo = null;
-        String id = request.getHeader("WX_HEADER_ID");
-        String skey = request.getHeader("WX_HEADER_SKEY");
+        String id = request.getHeader("x-wx-id");
+        String skey = request.getHeader("x-wx-skey");
         if (id!=null&&skey!=null) {
             HttpHeaders headers = new HttpHeaders();
-            headers.add("WX_HEADER_ID",id);
-            headers.add("WX_HEADER_SKEY",skey);
-            HttpEntity<String> httpEntity = new HttpEntity<>(null, headers);
-            ResponseEntity<Result> resultResponseEntity = null;
+            headers.add("x-wx-id",id);
+            headers.add("x-wx-skey",skey);
+            HttpEntity<String> httpEntity = new HttpEntity<>("", headers);
+            ResponseEntity<String> resultResponseEntity = null;
+            Res res = null;
             try {
-                resultResponseEntity = restTemplate.exchange("http://user-server/wx/check",HttpMethod.GET,httpEntity,Result.class);
+                resultResponseEntity = restTemplate.exchange("http://user-server/wx/check",HttpMethod.GET,httpEntity,String.class);
+                res = JSON.parseObject(resultResponseEntity.getBody(),Res.class);
             } catch (Exception e) {
                 e.printStackTrace();
             }
             if (resultResponseEntity!=null) {
                 try {
-                    ourUserInfo = (OurUserInfo) resultResponseEntity.getBody().getData();
+                    ourUserInfo = res.getData();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

@@ -4,6 +4,7 @@ import com.real.logicserver.dto.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -19,7 +20,7 @@ public class QuizController {
 
     @PostMapping("/create")
     @ApiOperation("创建调查问卷")
-    public Result createQuiz(HttpServletRequest request,@RequestBody ){
+    public Result createQuiz(HttpServletRequest request){
         return null;
     }
     /**

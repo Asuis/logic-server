@@ -12,6 +12,26 @@ public class Selection {
      * */
     private Integer num;
 
+    public Selection(String serialNumber, String content) {
+        this.serialNumber = serialNumber;
+        this.content = content;
+        this.num = 0;
+    }
+    public Selection() {
+        this.num = 0;
+    }
+
+    public Integer getNum() {
+        return num;
+    }
+
+    public void setNum(Integer num) {
+        this.num = num;
+    }
+    public void addNum(int de) {
+        this.num+=de;
+    }
+
     public String getSerialNumber() {
         return this.serialNumber;
     }

@@ -15,20 +15,25 @@ import com.real.logicserver.meeting.repository.MeetingUserMapper;
 @Service
 public class MeetingCreateServiceImpl implements MeetingCreateService  {
 
-	@Autowired
-	private MeetingUserMapper meetingUserMapper;
+	private final MeetingUserMapper meetingUserMapper;
 	
+	private final MeetingMapper meetingMapper;
+
 	@Autowired
-	private MeetingMapper meetingMapper;
-	
+	public MeetingCreateServiceImpl(MeetingUserMapper meetingUserMapper, MeetingMapper meetingMapper) {
+		this.meetingUserMapper = meetingUserMapper;
+		this.meetingMapper = meetingMapper;
+	}
+
 	@Override
-	public boolean meetingCreate(MeetingCreate meetingCreate) {		
+	public Integer meetingCreate(MeetingCreate meetingCreate) {
+		Integer meetingId = null;
 		try {
 			Meeting meeting = new Meeting();
 			meeting.setTypeId(meetingCreate.getType());
 			meetingMapper.insertSelective(meeting);
 			
-			int meetingId = meeting.getMeId();		
+			meetingId = meeting.getMeId();
 			
 			MeetingUser meetingUser = new MeetingUser();
 			meetingUser.setCreateTime(new Date(System.currentTimeMillis()));
@@ -38,9 +43,9 @@ public class MeetingCreateServiceImpl implements MeetingCreateService  {
 			meetingUserMapper.insertSelective(meetingUser);	
 		}
 		catch(Exception e) {
-			return false;
+			return null;
 		}
-		return true;
+		return meetingId;
 	}
 
 

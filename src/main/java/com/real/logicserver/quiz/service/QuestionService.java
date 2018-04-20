@@ -1,5 +1,6 @@
 package com.real.logicserver.quiz.service;
 
+import com.real.logicserver.quiz.form.QuestionAnswerForm;
 import com.real.logicserver.quiz.model.mongo.Questions;
 import org.bson.BSON;
 
@@ -9,6 +10,6 @@ import org.bson.BSON;
 public interface QuestionService {
     public String createQuestionForm(Questions questions);
     public boolean deleteQuestionForm(String id);
-    public boolean submitQuestionForm();
-    public boolean getDetailsQuestionForm();
+    public boolean submitQuestionForm(QuestionAnswerForm form);
+    public Questions getDetailsQuestionForm(String questionsId) throws NotFoundQuestionException;
 }

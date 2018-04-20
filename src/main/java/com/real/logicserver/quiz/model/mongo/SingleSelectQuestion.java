@@ -1,32 +1,30 @@
 package com.real.logicserver.quiz.model.mongo;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
  * @author asuis
  */
 public class SingleSelectQuestion extends AbstractQuestion {
-    private List<Selection> selections;
+    private HashMap<String,Selection> selections;
     private String trueAnswer;
-    private List<SingleSelectAnswer> answers;
+    private HashMap<String,List<SingleSelectAnswer>> answers;
 
     public SingleSelectQuestion(){
         this.type = QuestionType.SINGLE_SELECT;
+        this.answers = new HashMap<>();
+        this.selections = new HashMap<>();
     }
 
-    public void setSelections(List<Selection> selections) {
-        this.selections = selections;
-    }
 
     public void setTrueAnswer(String trueAnswer) {
         this.trueAnswer = trueAnswer;
     }
 
-    public List<Selection> getSelections() {
-        return selections;
-    }
 
-    public List<SingleSelectAnswer> getAnswers() {
+    public HashMap<String,List<SingleSelectAnswer>> getAnswers() {
         return answers;
     }
 
@@ -34,13 +32,20 @@ public class SingleSelectQuestion extends AbstractQuestion {
         return trueAnswer;
     }
 
-    public void setAnswers(List<SingleSelectAnswer> answers) {
-        this.answers = answers;
-    }
     public void addAnswer(SingleSelectAnswer answer) {
-        this.answers.add(answer);
+        String select = answer.getSerialNumber();
+        if (selections.containsKey(select)) {
+            selections.get(select).addNum(1);
+            if (answers.containsKey(select)) {
+                answers.get(select).add(answer);
+            } else {
+                List<SingleSelectAnswer> answerList = new ArrayList<>();
+                answerList.add(answer);
+                answers.put(select,answerList);
+            }
+        }
     }
     public void addSelection(Selection selection) {
-        this.selections.add(selection);
+        this.selections.put(selection.getSerialNumber(),selection);
     }
 }

@@ -16,7 +16,9 @@ import com.real.logicserver.meeting.model.MeetingSigned;
 import com.real.logicserver.meeting.model.MeetingUser;
 import com.real.logicserver.meeting.model.UploadResult;
 import com.real.logicserver.meeting.query.MeetingQuery;
+import com.real.logicserver.meeting.service.*;
 import com.real.logicserver.meeting.valitor.LogoFileValitor;
+import com.real.logicserver.utils.user.OurLoginService;
 import com.real.logicserver.utils.user.model.OurUserInfo;
 
 import io.swagger.annotations.Api;
@@ -49,32 +51,37 @@ import java.util.List;
 @RequestMapping("/v1/m")
 public class MeetingController {
 
-	 @Autowired
-	 com.real.logicserver.utils.user.OurLoginService ourLoginService;
+	 private final com.real.logicserver.utils.user.OurLoginService ourLoginService;
 	
-	 @Autowired
-	 com.real.logicserver.meeting.service.MeetingCreateService meetingCreatService;
+	 private final com.real.logicserver.meeting.service.MeetingCreateService meetingCreatService;
 	 
-	 @Autowired
-	 com.real.logicserver.meeting.service.MeetingDeleteService meetingDeleteService;
+	 private final com.real.logicserver.meeting.service.MeetingDeleteService meetingDeleteService;
 	 
-	 @Autowired
-	 com.real.logicserver.meeting.service.MeetingUpdateService meetingUpdateService;
+	 private final com.real.logicserver.meeting.service.MeetingUpdateService meetingUpdateService;
 	 
-	 @Autowired
-	 com.real.logicserver.meeting.service.MeetingSearchService meetingSearchService;
+	 private final com.real.logicserver.meeting.service.MeetingSearchService meetingSearchService;
 	 
-	 @Autowired
-	 com.real.logicserver.meeting.service.MeetingMemberService meetingMemberService;
+	 private final com.real.logicserver.meeting.service.MeetingMemberService meetingMemberService;
 	 
-	 @Autowired
-	 com.real.logicserver.meeting.service.MeetingHistoryService meetingHistoryService;
+	 private final com.real.logicserver.meeting.service.MeetingHistoryService meetingHistoryService;
 	 
 	
 	 private static final Logger log = LoggerFactory.getLogger(MeetingController.class);
 	 
 	 private static final String UPLOADED_FOLDER = "D://Temp/";
-    /**
+
+	@Autowired
+	public MeetingController(OurLoginService ourLoginService, MeetingCreateService meetingCreatService, MeetingDeleteService meetingDeleteService, MeetingUpdateService meetingUpdateService, MeetingSearchService meetingSearchService, MeetingMemberService meetingMemberService, MeetingHistoryService meetingHistoryService) {
+		this.ourLoginService = ourLoginService;
+		this.meetingCreatService = meetingCreatService;
+		this.meetingDeleteService = meetingDeleteService;
+		this.meetingUpdateService = meetingUpdateService;
+		this.meetingSearchService = meetingSearchService;
+		this.meetingMemberService = meetingMemberService;
+		this.meetingHistoryService = meetingHistoryService;
+	}
+
+	/**
      * 上传会议logo（图片）
      * 使用腾讯cos
      * 先缓存到本地然后使用cos sdk上传至对象存储
@@ -123,14 +130,16 @@ public class MeetingController {
      */   
     @PostMapping("/create")
     @ApiOperation("创建会议")
-    public Result<MeetingCreate> createMeeting(@RequestBody MeetingCreate meetingCreate,HttpServletRequest request){
+    public Result<Meeting> createMeeting(@RequestBody MeetingCreate meetingCreate,HttpServletRequest request){
     	
     	Integer userId = ourLoginService.wxCheck(request).getUserId();
     	
     	meetingCreate.setUserId(userId);
-    	boolean accept = meetingCreatService.meetingCreate(meetingCreate);
-    	if(accept) {
-    		return new Result<>(ResultCode.SUCC,meetingCreate,"creat successful");
+    	Integer mid = meetingCreatService.meetingCreate(meetingCreate);
+    	Meeting meeting = new Meeting();
+    	meeting.setMeId(mid);
+    	if(mid!=null) {
+    		return new Result<>(ResultCode.SUCC,meeting,"creat successful");
     	}
     	else {
     		return new Result<>(ResultCode.FAIL,null,"creat fail");
@@ -167,9 +176,9 @@ public class MeetingController {
      * */
     @PostMapping("/update")
     @ApiOperation("上传更新会议信息")
-    public Result<MeetingUpdate> updateMeeting(@RequestBody MeetingUpdate meetingUpdate){
-    	int userId = 2;
-    	
+    public Result<MeetingUpdate> updateMeeting(HttpServletRequest request, @RequestBody MeetingUpdate meetingUpdate){
+		Integer userId = ourLoginService.wxCheck(request).getUserId();
+
     	meetingUpdate.setUserId(userId);
     	boolean accept = meetingUpdateService.meetingUpdate(meetingUpdate);
     	if(accept) {
@@ -187,12 +196,13 @@ public class MeetingController {
     @PostMapping("/search")
     @ApiOperation("查找会议")
     public Result<Meeting> searchMeeting(@RequestBody MeetingQuery meetingQuery){
-    	System.out.println("!");
     	Meeting meeting = meetingSearchService.meetingSearch(meetingQuery);
     	if(meeting!=null) {
     		 return new Result<>(ResultCode.SUCC,meeting,"search successful");  	
     	}	
-    	else return new Result<>(ResultCode.FAIL,null,"search fail");  	
+    	else {
+			return new Result<>(ResultCode.FAIL,null,"search fail");
+		}
     	
     }
     
@@ -256,7 +266,6 @@ public class MeetingController {
     	else {
     		return new Result<>(ResultCode.SUCC,signedList,"search successful");
     	}
-
     }
 
     /**
@@ -280,12 +289,13 @@ public class MeetingController {
     }
 
     /**
-     * 获得会议邀请码
+     * 获得会议邀请码或者二维码
      * */
     @GetMapping("/invite/get/{type}")
     @ApiOperation("会议邀请码，需验证身份")
     public Result<String> getInviteCode(HttpServletRequest request,HttpServletResponse response,@PathVariable("type") String type) {
-        return null;
+
+    	return null;
     }
     /**
      * 获取文件列表
