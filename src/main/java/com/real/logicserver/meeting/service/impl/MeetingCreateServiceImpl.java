@@ -1,7 +1,8 @@
-package com.real.logicserver.meeting.service;
+package com.real.logicserver.meeting.service.impl;
 
 import java.util.Date;
 
+import com.real.logicserver.meeting.service.MeetingCreateService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.stereotype.Service;
@@ -13,7 +14,7 @@ import com.real.logicserver.meeting.repository.MeetingMapper;
 import com.real.logicserver.meeting.repository.MeetingUserMapper;
 
 @Service
-public class MeetingCreateServiceImpl implements MeetingCreateService  {
+public class MeetingCreateServiceImpl implements MeetingCreateService {
 
 	private final MeetingUserMapper meetingUserMapper;
 	

@@ -1,4 +1,4 @@
-package com.real.logicserver.meeting.service;
+package com.real.logicserver.meeting.service.impl;
 
 import com.qcloud.cos.COSClient;
 import com.qcloud.cos.ClientConfig;
@@ -9,6 +9,7 @@ import com.qcloud.cos.model.PutObjectResult;
 import com.qcloud.cos.region.Region;
 import com.real.logicserver.dto.Result;
 import com.real.logicserver.meeting.model.UploadResult;
+import com.real.logicserver.meeting.service.CosUploadService;
 
 import java.io.File;
 

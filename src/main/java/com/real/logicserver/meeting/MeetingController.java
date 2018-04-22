@@ -3,10 +3,7 @@ package com.real.logicserver.meeting;
 import com.github.pagehelper.PageInfo;
 import com.real.logicserver.dto.Result;
 import com.real.logicserver.dto.ResultCode;
-import com.real.logicserver.meeting.dto.MeetingHistoryQuery;
-import com.real.logicserver.meeting.dto.MeetingSimpleInfo;
 import com.real.logicserver.meeting.dto.SimpleUserInfo;
-import com.real.logicserver.meeting.form.MeetingForm;
 import com.real.logicserver.meeting.form.MeetingSignedMembers;
 import com.real.logicserver.meeting.form.MeetingUpdate;
 import com.real.logicserver.meeting.form.MeetingCreate;
@@ -22,16 +19,11 @@ import com.real.logicserver.utils.user.OurLoginService;
 import com.real.logicserver.utils.user.model.OurUserInfo;
 
 import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.DataBinder;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -51,27 +43,32 @@ import java.util.List;
 @RequestMapping("/v1/m")
 public class MeetingController {
 
-	 private final com.real.logicserver.utils.user.OurLoginService ourLoginService;
+
+	private final MeetingService meetingService;
+
+	private final static String DEFAULT_LOGO = "http://res.mengxiangjing.com/53969178_p0_master1200.jpg";
+
+	private final com.real.logicserver.utils.user.OurLoginService ourLoginService;
 	
-	 private final com.real.logicserver.meeting.service.MeetingCreateService meetingCreatService;
+	private final com.real.logicserver.meeting.service.MeetingCreateService meetingCreatService;
 	 
-	 private final com.real.logicserver.meeting.service.MeetingDeleteService meetingDeleteService;
+	private final com.real.logicserver.meeting.service.MeetingDeleteService meetingDeleteService;
 	 
-	 private final com.real.logicserver.meeting.service.MeetingUpdateService meetingUpdateService;
+	private final com.real.logicserver.meeting.service.MeetingUpdateService meetingUpdateService;
 	 
-	 private final com.real.logicserver.meeting.service.MeetingSearchService meetingSearchService;
+	private final com.real.logicserver.meeting.service.MeetingSearchService meetingSearchService;
 	 
-	 private final com.real.logicserver.meeting.service.MeetingMemberService meetingMemberService;
+	private final com.real.logicserver.meeting.service.MeetingMemberService meetingMemberService;
 	 
-	 private final com.real.logicserver.meeting.service.MeetingHistoryService meetingHistoryService;
+	private final com.real.logicserver.meeting.service.MeetingHistoryService meetingHistoryService;
 	 
 	
-	 private static final Logger log = LoggerFactory.getLogger(MeetingController.class);
+	private static final Logger log = LoggerFactory.getLogger(MeetingController.class);
 	 
-	 private static final String UPLOADED_FOLDER = "D://Temp/";
+	private static final String UPLOADED_FOLDER = "D://Temp/";
 
 	@Autowired
-	public MeetingController(OurLoginService ourLoginService, MeetingCreateService meetingCreatService, MeetingDeleteService meetingDeleteService, MeetingUpdateService meetingUpdateService, MeetingSearchService meetingSearchService, MeetingMemberService meetingMemberService, MeetingHistoryService meetingHistoryService) {
+	public MeetingController(OurLoginService ourLoginService, MeetingCreateService meetingCreatService, MeetingDeleteService meetingDeleteService, MeetingUpdateService meetingUpdateService, MeetingSearchService meetingSearchService, MeetingMemberService meetingMemberService, MeetingHistoryService meetingHistoryService, MeetingService meetingService) {
 		this.ourLoginService = ourLoginService;
 		this.meetingCreatService = meetingCreatService;
 		this.meetingDeleteService = meetingDeleteService;
@@ -79,6 +76,7 @@ public class MeetingController {
 		this.meetingSearchService = meetingSearchService;
 		this.meetingMemberService = meetingMemberService;
 		this.meetingHistoryService = meetingHistoryService;
+		this.meetingService = meetingService;
 	}
 
 	/**
@@ -137,6 +135,7 @@ public class MeetingController {
     	meetingCreate.setUserId(userId);
     	Integer mid = meetingCreatService.meetingCreate(meetingCreate);
     	Meeting meeting = new Meeting();
+		meeting.setLogo(DEFAULT_LOGO);
     	meeting.setMeId(mid);
     	if(mid!=null) {
     		return new Result<>(ResultCode.SUCC,meeting,"creat successful");
@@ -155,11 +154,10 @@ public class MeetingController {
     @ApiOperation("删除会议，应该用处不大")
     public Result<MeetingDelete> deleteMeeting(@PathVariable("id")String meetingId, HttpServletRequest request, HttpServletResponse response){
     	log.info("delete meetingId "+meetingId);
-    	Integer userId = 2;
-    	
+    	OurUserInfo ourUserInfo = ourLoginService.wxCheck(request);
     	MeetingDelete meetingDelete = new MeetingDelete();
     	meetingDelete.setMeetingId(Integer.valueOf(meetingId));
-    	meetingDelete.setUserId(userId);
+    	meetingDelete.setUserId(ourUserInfo.getUserId());
     	boolean accept = meetingDeleteService.meetingDelete(meetingDelete);
     	if(accept) {
     		return new Result<>(ResultCode.SUCC,meetingDelete,"creat successful");
@@ -172,7 +170,6 @@ public class MeetingController {
     /**
      * 更新会议信息
      * 场景app上传更新信息
-     * todo 再设计
      * */
     @PostMapping("/update")
     @ApiOperation("上传更新会议信息")
@@ -277,26 +274,19 @@ public class MeetingController {
     @ApiOperation("签到会议")
     public Result<MeetingSigned> signUpMeeting(@PathVariable("mid")Integer mid,HttpServletRequest request,HttpServletResponse response){
     	
-        Integer userId = 2;
-        MeetingSigned meetingSigned = meetingMemberService.meetingSigned(mid, userId);
-    	
-        if(meetingSigned==null) {
-        	return new Result<>(ResultCode.FAIL,null,"signed fail");  	
-        }
-        else {
-        	return new Result<>(ResultCode.SUCC,meetingSigned,"signed successful");
-        }
+        OurUserInfo ourUserInfo = ourLoginService.wxCheck(request);
+        if (ourUserInfo!=null) {
+			MeetingSigned meetingSigned = meetingMemberService.meetingSigned(mid, ourUserInfo.getUserId());
+			if(meetingSigned==null) {
+				return new Result<>(ResultCode.FAIL,null,"signed fail");
+			}
+			else {
+				return new Result<>(ResultCode.SUCC, meetingSigned, "signed successful");
+			}
+		}
+		return null;
     }
 
-    /**
-     * 获得会议邀请码或者二维码
-     * */
-    @GetMapping("/invite/get/{type}")
-    @ApiOperation("会议邀请码，需验证身份")
-    public Result<String> getInviteCode(HttpServletRequest request,HttpServletResponse response,@PathVariable("type") String type) {
-
-    	return null;
-    }
     /**
      * 获取文件列表
      * */
@@ -305,4 +295,31 @@ public class MeetingController {
     public Result getFileList() {
         return null;
     }
+
+    @PostMapping("/join/{mid}")
+	@ApiOperation("加入会议")
+	public Result joinMeeting(HttpServletRequest request, @PathVariable Integer mid) {
+    	Result result = null;
+    	OurUserInfo ourUserInfo = ourLoginService.wxCheck(request);
+    	if (ourUserInfo!=null) {
+			result = meetingService.joinMeeting(ourUserInfo,mid);
+		} else {
+    		result = new Result();
+    		result.setCode(ResultCode.FAIL);
+    		result.setMsg("please use weixin app login");
+		}
+    	return result;
+	}
+
+	/**
+	 * 获取会议成员(当前已报名的会议成员)
+	 * */
+	@GetMapping("/member/get2/{mid}/{pageNum}/{pageSize}")
+	@ApiOperation("获取会议成员(当前已报名的会议成员)")
+	public Result<PageInfo<SimpleUserInfo>> getMeetingMembers2(@PathVariable("mid") Integer mid,
+															   @PathVariable("pageNum")Integer pageNum,
+															   @PathVariable("pageSize") Integer pageSize){
+		return meetingService.getMembersByMeId(mid,pageNum,pageSize);
+	}
+
 }

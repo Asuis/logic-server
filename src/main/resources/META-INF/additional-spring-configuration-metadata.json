@@ -1,0 +1,23 @@
+{
+  "properties": [
+    {
+      "name": "wx.pay.app-id",
+      "type": "java.lang.String",
+      "description": "Description for wx.pay.app-id."
+    },
+    {
+      "name": "wx.pay.mch-id",
+      "type": "java.lang.String",
+      "description": "Description for wx.pay.mch-id."
+    },
+    {
+      "name": "wx.pay.unifiedorder-url",
+      "type": "java.lang.String",
+      "description": "Description for wx.pay.unifiedorder-url."
+    },
+    {
+      "name": "wx.pay.notify-url",
+      "type": "java.lang.String",
+      "description": "Description for wx.pay.notify-url."
+    }
+  ] }

@@ -1,4 +1,4 @@
-package com.real.logicserver.meeting.service;
+package com.real.logicserver.meeting.service.impl;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
+import com.real.logicserver.meeting.service.MeetingMemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,16 +17,23 @@ import com.real.logicserver.meeting.model.MeetingUser;
 import com.real.logicserver.meeting.repository.MeetingSignedMapper;
 import com.real.logicserver.meeting.repository.MeetingUserMapper;
 
+/**
+ * @author 36
+ */
 @Service
 public class MeetingMemberServiceImpl implements MeetingMemberService {
 	
+	private final MeetingUserMapper meetingUserMapper;
+	
+	private final MeetingSignedMapper meetingSignedMapper;
+
 	@Autowired
-	private MeetingUserMapper meetingUserMapper;
-	
-	@Autowired
-	private MeetingSignedMapper meetingSignedMapper;
-	
-	
+	public MeetingMemberServiceImpl(MeetingUserMapper meetingUserMapper, MeetingSignedMapper meetingSignedMapper) {
+		this.meetingUserMapper = meetingUserMapper;
+		this.meetingSignedMapper = meetingSignedMapper;
+	}
+
+
 	@Override
 	public List<MeetingUser> getMeetingMembers(Integer meetingId){
 		
@@ -73,12 +81,12 @@ public class MeetingMemberServiceImpl implements MeetingMemberService {
 
 	@Override
 	public MeetingSigned meetingSigned(Integer meetingId, Integer userId) {
-		
+
 		//未加入会议
 		List<MeetingUser> list = meetingUserMapper.getMeetingMembers(meetingId);
 		boolean userYes = false;
-		for(int n=0;n<list.size();n++) {
-			if(list.get(n).getUserId().equals(userId)) {
+		for (MeetingUser aList : list) {
+			if (aList.getUserId().equals(userId)) {
 				userYes = true;
 				break;
 			}

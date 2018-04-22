@@ -1,7 +1,8 @@
-package com.real.logicserver.meeting.service;
+package com.real.logicserver.meeting.service.impl;
 
 import java.util.List;
 
+import com.real.logicserver.meeting.service.MeetingSearchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

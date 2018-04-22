@@ -8,6 +8,6 @@ import lombok.Data;
 @Data
 public class SimpleUserInfo {
     private String nikeName;
-    private String userId;
+    private Integer userId;
     private String avatarUrl;
 }
