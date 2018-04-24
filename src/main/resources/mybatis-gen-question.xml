@@ -20,7 +20,7 @@
         </javaTypeResolver>
 
         <!-- !!!! Model Configurations !!!! -->
-        <javaModelGenerator targetPackage="com.real.logicserver.quiz.model" targetProject="logic-server">
+        <javaModelGenerator targetPackage="com.real.logicserver.quiz.model" targetProject=".">
             <property name="enableSubPackages" value="false"/>
             <property name="trimStrings" value="true"/>
         </javaModelGenerator>
