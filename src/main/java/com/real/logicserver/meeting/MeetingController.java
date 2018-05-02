@@ -15,6 +15,7 @@ import com.real.logicserver.meeting.model.UploadResult;
 import com.real.logicserver.meeting.query.MeetingQuery;
 import com.real.logicserver.meeting.service.*;
 import com.real.logicserver.meeting.valitor.LogoFileValitor;
+import com.real.logicserver.utils.tools.upload.UploadUtils;
 import com.real.logicserver.utils.user.OurLoginService;
 import com.real.logicserver.utils.user.model.OurUserInfo;
 
@@ -33,6 +34,8 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -111,7 +114,36 @@ public class MeetingController {
         }
         return new Result<>(ResultCode.SUCC,uploadResult,"upload successful");
     }
-    
+    /**
+	 * todo 权限验证
+	 * */
+    @GetMapping(value = "/upload/token/logo")
+	@ApiOperation("获取logo")
+	public Result<HashMap<String,String>> getUploadToken(HttpServletRequest request) {
+		Result<HashMap<String,String>> result = new Result<>();
+		try {
+			String upToken = UploadUtils.getQiniuUploadToken();
+			result.setCode(ResultCode.SUCC);
+			HashMap<String,String> resultMap = new HashMap<>();
+			resultMap.put("up_token",upToken);
+			result.setData(resultMap);
+		} catch (RuntimeException e) {
+			e.printStackTrace();
+			result.setCode(ResultCode.FAIL);
+		}
+		return result;
+	}
+	@GetMapping(value = "/upload/token/logo/callback")
+	@ApiOperation("获取logo")
+	public Result<HashMap<String,String>> qiniuUploadCallback(HttpServletRequest request) {
+		Result<HashMap<String,String>> result = new Result<>();
+		HashMap<String,String> map = new HashMap<>();
+		Enumeration<String> res = request.getAttributeNames();
+		map.put("str",res.toString());
+		result.setData(map);
+		return result;
+	}
+
     /**
      * 创建会议
      * 场景 app点击创建会议 从数据库 添加默认会议（按模板填写）
