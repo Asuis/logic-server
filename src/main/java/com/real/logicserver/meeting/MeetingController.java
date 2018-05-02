@@ -139,6 +139,9 @@ public class MeetingController {
 		Result<HashMap<String,String>> result = new Result<>();
 		HashMap<String,String> map = new HashMap<>();
 		Enumeration<String> res = request.getAttributeNames();
+		while (res.hasMoreElements()) {
+			System.out.println(res.nextElement());
+		}
 		map.put("str",res.toString());
 		result.setData(map);
 		return result;
