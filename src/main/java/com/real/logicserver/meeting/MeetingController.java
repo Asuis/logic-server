@@ -140,7 +140,7 @@ public class MeetingController {
 		HashMap<String,String> map = new HashMap<>();
 		Enumeration<String> res = request.getAttributeNames();
 		while (res.hasMoreElements()) {
-			System.out.println(res.nextElement());
+			System.out.println(res.nextElement().toString());
 		}
 		map.put("str",res.toString());
 		result.setData(map);
