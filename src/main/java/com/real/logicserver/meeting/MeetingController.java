@@ -135,8 +135,12 @@ public class MeetingController {
 	}
 	@RequestMapping(value = "/upload/token/logo/callback")
 	@ApiOperation("qiniu callback")
-	public Result<HashMap<String,String>> qiniuUploadCallback() {
+	public Result<HashMap<String,String>> qiniuUploadCallback(HttpServletRequest request) {
 		Result<HashMap<String,String>> result = new Result<>();
+		HashMap<String,String> map = new HashMap<>();
+		Enumeration<String> res = request.getAttributeNames();
+		map.put("str",res.toString());
+		result.setData(map);
 		return result;
 	}
 
