@@ -117,7 +117,7 @@ public class MeetingController {
     /**
 	 * todo 权限验证
 	 * */
-    @GetMapping(value = "/upload/token/logo")
+    @PostMapping(value = "/upload/token/logo")
 	@ApiOperation("获取logo")
 	public Result<HashMap<String,String>> getUploadToken(HttpServletRequest request) {
 		Result<HashMap<String,String>> result = new Result<>();
