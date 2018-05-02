@@ -117,7 +117,7 @@ public class MeetingController {
     /**
 	 * todo 权限验证
 	 * */
-    @PostMapping(value = "/upload/token/logo")
+    @GetMapping(value = "/upload/token/logo")
 	@ApiOperation("获取logo")
 	public Result<HashMap<String,String>> getUploadToken(HttpServletRequest request) {
 		Result<HashMap<String,String>> result = new Result<>();
@@ -133,8 +133,8 @@ public class MeetingController {
 		}
 		return result;
 	}
-	@GetMapping(value = "/upload/token/logo/callback")
-	@ApiOperation("获取logo")
+	@PostMapping(value = "/upload/token/logo/callback")
+	@ApiOperation("qiniu callback")
 	public Result<HashMap<String,String>> qiniuUploadCallback(HttpServletRequest request) {
 		Result<HashMap<String,String>> result = new Result<>();
 		HashMap<String,String> map = new HashMap<>();
