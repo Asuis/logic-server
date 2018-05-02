@@ -13,7 +13,7 @@ public class UploadUtils {
         String bucket = "asuis-oss";
         Auth auth = Auth.create(accessKey, secretKey);
         StringMap putPolicy = new StringMap();
-        putPolicy.put("callbackUrl", "https://asuis.mengxiangjing.com/logic-server/v1/m/upload/token/logo");
+        putPolicy.put("callbackUrl", "https://asuis.mengxiangjing.com/api/logic-server/v1/m/upload/token/logo");
         putPolicy.put("callbackBody", "{\"key\":\"$(key)\",\"hash\":\"$(etag)\",\"bucket\":\"$(bucket)\",\"fsize\":$(fsize)}");
         putPolicy.put("callbackBodyType", "application/json");
         long expireSeconds = 3600;
