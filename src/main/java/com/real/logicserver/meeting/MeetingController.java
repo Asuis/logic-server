@@ -133,7 +133,7 @@ public class MeetingController {
 		}
 		return result;
 	}
-	@PostMapping(value = "/upload/token/logo/callback")
+	@RequestMapping(value = "/upload/token/logo/callback")
 	@ApiOperation("qiniu callback")
 	public Result<HashMap<String,String>> qiniuUploadCallback(HttpServletRequest request) {
 		Result<HashMap<String,String>> result = new Result<>();
