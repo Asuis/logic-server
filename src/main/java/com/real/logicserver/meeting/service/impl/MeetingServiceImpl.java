@@ -5,6 +5,7 @@ import com.github.pagehelper.PageInfo;
 import com.real.logicserver.dto.Result;
 import com.real.logicserver.dto.ResultCode;
 import com.real.logicserver.meeting.constants.MeetingStatus;
+import com.real.logicserver.meeting.dto.MeetingSimpleInfo;
 import com.real.logicserver.meeting.dto.SimpleUserInfo;
 import com.real.logicserver.meeting.model.Meeting;
 import com.real.logicserver.meeting.model.MeetingUser;
@@ -84,6 +85,34 @@ public class MeetingServiceImpl implements MeetingService {
             pageInfoResult.setCode(ResultCode.SUCC);
             pageInfoResult.setMsg("query members successful");
             pageInfoResult.setData(userInfoPageInfo);
+        } catch (Exception e) {
+            e.printStackTrace();
+            pageInfoResult.setCode(ResultCode.FAIL);
+            pageInfoResult.setMsg("query error");
+        }
+        return pageInfoResult;
+    }
+
+    @Override
+    public Result<PageInfo<MeetingSimpleInfo>> getMeetingSimple(Integer pageNum, Integer pageSize) {
+        Result<PageInfo<MeetingSimpleInfo>> pageInfoResult = new Result<>();
+        if (pageNum==null) {
+            pageNum = 0;
+        } else if (pageNum<0) {
+            pageNum = 0;
+        }
+        if (pageSize==null) {
+            pageSize = 3;
+        } else if (pageSize<1) {
+            pageSize = 3;
+        }
+        try {
+            PageHelper.startPage(pageSize,pageNum);
+            List<MeetingSimpleInfo> meetingSimpleInfo = meetingDao.getMeetingsByQuery();
+            PageInfo<MeetingSimpleInfo> meetingSimpleInfos = new PageInfo<>(meetingSimpleInfo);
+            pageInfoResult.setCode(ResultCode.SUCC);
+            pageInfoResult.setMsg("query members successful");
+            pageInfoResult.setData(meetingSimpleInfos);
         } catch (Exception e) {
             e.printStackTrace();
             pageInfoResult.setCode(ResultCode.FAIL);

@@ -9,7 +9,7 @@ import java.util.Date;
  */
 @Data
 public class MeetingSimpleInfo {
-    private String mid;
+    private Integer mid;
     private String title;
     private String desc;
     private String logo;

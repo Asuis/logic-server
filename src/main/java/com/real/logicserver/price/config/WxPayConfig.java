@@ -9,6 +9,7 @@ import java.io.*;
 /**
  * @author 15988440973
  */
+@Configuration
 public class WxPayConfig implements WXPayConfig {
     @Value("${wx.pay.app-id}")
     private String appId;
@@ -21,11 +22,11 @@ public class WxPayConfig implements WXPayConfig {
     private String certPath;
     private byte[] certData;
     public WxPayConfig() throws IOException {
-        File file = new File(certPath);
-        InputStream certStream = new FileInputStream(file);
-        this.certData = new byte[(int) file.length()];
-        certStream.read(this.certData);
-        certStream.close();
+//        File file = new File(certPath);
+//        InputStream certStream = new FileInputStream(file);
+//        this.certData = new byte[(int) file.length()];
+//        certStream.read(this.certData);
+//        certStream.close();
     }
 
     @Override
@@ -45,7 +46,8 @@ public class WxPayConfig implements WXPayConfig {
 
     @Override
     public InputStream getCertStream() {
-        return new ByteArrayInputStream(this.certData);
+        return null;
+//        return new ByteArrayInputStream(this.certData);
     }
 
     @Override

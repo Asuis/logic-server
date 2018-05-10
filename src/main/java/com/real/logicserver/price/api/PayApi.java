@@ -18,7 +18,7 @@ import java.util.Map;
 /**
  * @author 15988440973
  */
-//@Component
+@Component
 @Slf4j
 public class PayApi {
 
@@ -48,12 +48,12 @@ public class PayApi {
         HashMap<String,String> data = new HashMap<>();
 
         data.put("openid",openId);
-        data.put("body","");
+        data.put("body","boke-红包");
         data.put("out_trade_no","2015");
         data.put("fee_type","CNY");
         data.put("total_fee","1");
         data.put("spbill_create_ip","123.123.123.123");
-        data.put("notify_url","");
+        data.put("notify_url","https://asuis.mengxingjing.com/logic-server/pay/notify");
         data.put("trade_type","JSAPI");
 
         Map<String,String> result = null;

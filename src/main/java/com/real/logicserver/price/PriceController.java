@@ -5,6 +5,7 @@ import com.real.logicserver.price.api.PayApi;
 import com.real.logicserver.price.form.RedPaperForm;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,14 +17,20 @@ import javax.servlet.http.HttpServletResponse;
  * 红包 金额 交易 模块
  */
 @RestController
-@RequestMapping("/v1/p")
+@RequestMapping("/v1/pay")
 @Api("金额交易相关系统")
 public class PriceController {
 
-//    @Autowired
-//    private PayApi payApi;
+    private static final Logger log = org.slf4j.LoggerFactory.getLogger(PriceController.class);
 
-    @PostMapping("/payment/notice")
+    private final PayApi payApi;
+
+    @Autowired
+    public PriceController(PayApi payApi) {
+        this.payApi = payApi;
+    }
+
+    @PostMapping("/notice")
     public Result paymentNotice(@RequestBody String str) {
         return null;
     }
@@ -41,7 +48,8 @@ public class PriceController {
      * 创建红包
      * */
     @PostMapping(value = "/create")
-    public Result createRedPaper(@RequestBody RedPaperForm redPaperForm) {
+    public Result createRedPaper(HttpServletRequest request, @RequestBody RedPaperForm redPaperForm) {
+        payApi.unifiedOrder(request);
         return null;
     }
     /**

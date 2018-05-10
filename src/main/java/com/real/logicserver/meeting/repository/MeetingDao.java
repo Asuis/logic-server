@@ -1,6 +1,8 @@
 package com.real.logicserver.meeting.repository;
 
+import com.real.logicserver.meeting.dto.MeetingSimpleInfo;
 import com.real.logicserver.meeting.dto.SimpleUserInfo;
+import com.real.logicserver.meeting.query.MeetingQuery;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -19,4 +21,6 @@ public interface MeetingDao {
     Integer isExist(@Param("mid") Integer meId);
 
     List<SimpleUserInfo> getMembersByMeId(@Param("mid") Integer meId);
+
+    List<MeetingSimpleInfo> getMeetingsByQuery();
 }

@@ -3,6 +3,7 @@ package com.real.logicserver.meeting;
 import com.github.pagehelper.PageInfo;
 import com.real.logicserver.dto.Result;
 import com.real.logicserver.dto.ResultCode;
+import com.real.logicserver.meeting.dto.MeetingSimpleInfo;
 import com.real.logicserver.meeting.dto.SimpleUserInfo;
 import com.real.logicserver.meeting.form.MeetingSignedMembers;
 import com.real.logicserver.meeting.form.MeetingUpdate;
@@ -356,5 +357,10 @@ public class MeetingController {
 															   @PathVariable("pageSize") Integer pageSize){
 		return meetingService.getMembersByMeId(mid,pageNum,pageSize);
 	}
-
+	@GetMapping("/query/{pageNum}/{pageSize}")
+	@ApiOperation("获取会议")
+	public Result<PageInfo<MeetingSimpleInfo>> getMeetingSimpleInfo(@PathVariable("pageNum")Integer pageNum,
+																	@PathVariable("pageSize") Integer pageSize){
+		return meetingService.getMeetingSimple(pageNum, pageSize);
+	}
 }

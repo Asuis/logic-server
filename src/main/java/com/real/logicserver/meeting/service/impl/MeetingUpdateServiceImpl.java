@@ -44,7 +44,7 @@ public class MeetingUpdateServiceImpl implements MeetingUpdateService {
 				return false;
 			}
 			if(meetingUpdate.getStartTime()!=null) {
-				meeting.setEndTime(meetingUpdate.getStartTime());
+				meeting.setStartTime(meetingUpdate.getStartTime());
 			} else {
 				return false;
 			}

@@ -22,6 +22,14 @@
         <result column="avatar_url" jdbcType="VARCHAR" property="avatarUrl"/>
         <result column="nike_name" property="nikeName" jdbcType="VARCHAR"/>
     </resultMap>
+    <resultMap id="MeetingSimpleInfo" type="com.real.logicserver.meeting.dto.MeetingSimpleInfo">
+        <id column="me_id" jdbcType="INTEGER" property="mid"/>
+        <result column="title" jdbcType="VARCHAR" property="title"/>
+        <result column="desc" jdbcType="VARCHAR" property="desc"/>
+        <result column="start_time" jdbcType="TIMESTAMP" property="start"/>
+        <result column="end_time" jdbcType="TIMESTAMP" property="end"/>
+        <result column="logo" jdbcType="VARCHAR" property="logo"/>
+    </resultMap>
     <sql id="Base_Column_List">
         <!--
           WARNING - @mbg.generated
@@ -40,5 +48,9 @@
         FROM user_detail,meeting_user
         where meeting_user.me_id = #{mid,jdbcType=INTEGER}
         AND meeting_user.user_id = user_detail.user_id
+    </select>
+    <select id="getMeetingsByQuery" resultMap="MeetingSimpleInfo">
+        SELECT me_id,start_time,end_time,logo,title,`desc`
+        FROM meeting ORDER BY num DESC
     </select>
 </mapper>

@@ -14,16 +14,21 @@ import com.real.logicserver.meeting.repository.MeetingMapper;
 @Service
 public class MeetingSearchServiceImpl implements MeetingSearchService {
 
-	@Autowired
-	private MeetingMapper meetingMapper;
+	private final MeetingMapper meetingMapper;
 
-	
+	@Autowired
+	public MeetingSearchServiceImpl(MeetingMapper meetingMapper) {
+		this.meetingMapper = meetingMapper;
+	}
+
+
 	@Override
 	public Meeting meetingSearch(MeetingQuery meetingQuery) {
 		Meeting res = null;
 		try {			
-			
-			res = meetingMapper.selectByPrimaryKey(Integer.valueOf(meetingQuery.getQuery()));
+			Integer mid = Integer.valueOf(meetingQuery.getQuery());
+			res = meetingMapper.selectByPrimaryKey(mid);
+
 		}
 		catch(Exception e) {
 			return null;
