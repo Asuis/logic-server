@@ -3,10 +3,14 @@ package com.real.logicserver.social.friend;
 import com.real.logicserver.dto.Result;
 import com.real.logicserver.dto.ResultCode;
 import com.real.logicserver.social.friend.form.InviteFriendForm;
+import com.real.logicserver.social.friend.service.FriendService;
+import com.real.logicserver.social.service.SocialService;
 import io.swagger.annotations.Api;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author asuis
@@ -16,12 +20,16 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/v1/fri")
 public class FriendController {
 	
-	@Autowired
-	com.real.logicserver.social.friend.service.FriendService friendService;
+	private final com.real.logicserver.social.friend.service.FriendService friendService;
 	
-	@Autowired
-	com.real.logicserver.social.service.SocialService socialService;
-	
+	private final com.real.logicserver.social.service.SocialService socialService;
+
+    @Autowired
+    public FriendController(FriendService friendService, SocialService socialService) {
+        this.friendService = friendService;
+        this.socialService = socialService;
+    }
+
     /**
      * 添加好友
      * */
@@ -81,7 +89,7 @@ public class FriendController {
      * 获取朋友列表
      * */
     @GetMapping("/list")
-    public Result getFriendList(){
+    public Result getFriendList(HttpServletRequest request){
         return null;
     }
     /**

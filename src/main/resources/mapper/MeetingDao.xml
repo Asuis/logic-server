@@ -53,4 +53,18 @@
         SELECT me_id,start_time,end_time,logo,title,`desc`
         FROM meeting ORDER BY num DESC
     </select>
+    <select id="getMyMeeting" parameterType="Integer" resultMap="MeetingSimpleInfo">
+        SELECT meeting.me_id,start_time,end_time,logo,title,`desc`
+        FROM meeting,meeting_user WHERE
+            meeting.me_id=meeting_user.me_id AND
+            meeting_user.user_id = #{uid,jdbcType=INTEGER}
+        ORDER BY meeting.create_time DESC
+
+    </select>
+    <select id="getFriendMeeting" parameterType="Integer" resultMap="MeetingSimpleInfo">
+        SELECT meeting.me_id,start_time,end_time,logo,title,`desc`
+        FROM meeting,meeting_user WHERE meeting.me_id=meeting_user.me_id
+        AND meeting_user.user_id IN (SELECT user_friend.fr_user_id FROM user_friend
+        WHERE user_friend.user_id = #{uid,jdbcType=INTEGER})
+    </select>
 </mapper>

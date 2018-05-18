@@ -35,6 +35,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.sql.ResultSet;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
@@ -46,7 +47,6 @@ import java.util.List;
 @Api("会议相关接口")
 @RequestMapping("/v1/m")
 public class MeetingController {
-
 
 	private final MeetingService meetingService;
 
@@ -66,7 +66,6 @@ public class MeetingController {
 	 
 	private final com.real.logicserver.meeting.service.MeetingHistoryService meetingHistoryService;
 	 
-	
 	private static final Logger log = LoggerFactory.getLogger(MeetingController.class);
 	 
 	private static final String UPLOADED_FOLDER = "D://Temp/";
@@ -88,7 +87,6 @@ public class MeetingController {
      * 使用腾讯cos
      * 先缓存到本地然后使用cos sdk上传至对象存储
      * */
-    
     @PostMapping(value = "/upload/logo",consumes = "multipart/*",headers = "content-type=multipart/form-data")
     @ApiOperation("创建会议时上传logo")
     public Result<UploadResult> uploadLogo(@ApiParam(value = "上传的logo文件",required = true) @RequestParam("logo") MultipartFile file){
@@ -97,7 +95,7 @@ public class MeetingController {
     	if(res.equals(ResultCode.FAIL)) {
     		return  new Result<>(ResultCode.FAIL,null,"Please select a file to upload");
     	}
-    	
+
     	UploadResult uploadResult = new UploadResult();
         if (file.isEmpty()) {
             return new Result<>(ResultCode.FAIL,null,"Please select a file to upload");
@@ -120,14 +118,15 @@ public class MeetingController {
 	 * */
     @GetMapping(value = "/upload/token/logo")
 	@ApiOperation("获取logo")
-	public Result<HashMap<String,String>> getUploadToken(HttpServletRequest request) {
+	public Result<HashMap<String,String>> getUploadToken(HttpServletRequest request,@RequestParam("mid")Integer mid) {
 		Result<HashMap<String,String>> result = new Result<>();
 		try {
-			String upToken = UploadUtils.getQiniuUploadToken();
+			String upToken = UploadUtils.getQiniuUploadToken("mlogo_"+mid+".jpg");
 			result.setCode(ResultCode.SUCC);
 			HashMap<String,String> resultMap = new HashMap<>();
 			resultMap.put("up_token",upToken);
 			result.setData(resultMap);
+			meetingService.updateLogo(mid,"mlogo_"+mid+".jpg");
 		} catch (RuntimeException e) {
 			e.printStackTrace();
 			result.setCode(ResultCode.FAIL);
@@ -291,14 +290,7 @@ public class MeetingController {
     @GetMapping("/sign/get/{mid}")
     @ApiOperation("获取会议进行中，签到的人选")
     public Result<List<MeetingSignedMembers>> getSignUpList(@PathVariable("mid") Integer mid){
-    	
-    	List<MeetingSignedMembers> signedList = meetingMemberService.getMeetingSignMembers(mid);
-    	if(signedList==null) {
-    		return new Result<>(ResultCode.FAIL,null,"search fail");  	
-    	}
-    	else {
-    		return new Result<>(ResultCode.SUCC,signedList,"search successful");
-    	}
+    	return null;
     }
 
     /**
@@ -362,5 +354,21 @@ public class MeetingController {
 	public Result<PageInfo<MeetingSimpleInfo>> getMeetingSimpleInfo(@PathVariable("pageNum")Integer pageNum,
 																	@PathVariable("pageSize") Integer pageSize){
 		return meetingService.getMeetingSimple(pageNum, pageSize);
+	}
+	@GetMapping("/query/mym/{pageNum}/{pageSize}")
+	@ApiOperation("获取个人创建的会议")
+	public Result<PageInfo<MeetingSimpleInfo>> getMyMeetingSimpleInfo(@PathVariable("pageNum") Integer pageNum,
+																	  @PathVariable("pageSize") Integer pageSize,
+																	  HttpServletRequest request) {
+		OurUserInfo ourUserInfo = ourLoginService.wxCheck(request);
+		return meetingService.getMyMeetingSimpleInfo(pageNum, pageSize, ourUserInfo);
+	}
+	@GetMapping("/query/myf/{pageNum}/{pageSize}")
+	@ApiOperation("获取个人创建的会议")
+	public Result<PageInfo<MeetingSimpleInfo>> getFriendMeetingSimpleInfo(@PathVariable("pageNum") Integer pageNum,
+																	  @PathVariable("pageSize") Integer pageSize,
+																	  HttpServletRequest request) {
+		OurUserInfo ourUserInfo = ourLoginService.wxCheck(request);
+		return meetingService.getMyMeetingSimpleInfo(pageNum, pageSize, ourUserInfo);
 	}
 }

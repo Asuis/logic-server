@@ -120,4 +120,27 @@ public class OurLoginServiceImpl implements OurLoginService {
         }
         return ourUserInfo;
     }
+
+    @Override
+    public UserInfo checkWx(HttpServletRequest request) {
+        UserInfo userInfo = null;
+        String id = request.getHeader("x-wx-id");
+        String skey = request.getHeader("x-wx-skey");
+        if (id!=null&&skey!=null) {
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("x-wx-id",id);
+            headers.add("x-wx-skey",skey);
+            HttpEntity<String> httpEntity = new HttpEntity<>("", headers);
+            ResponseEntity<String> resultResponseEntity = null;
+            UserInfoRes res = null;
+            try {
+                resultResponseEntity = restTemplate.exchange("http://user-server/wx/user",HttpMethod.GET,httpEntity,String.class);
+                res = JSON.parseObject(resultResponseEntity.getBody(),UserInfoRes.class);
+                userInfo = res.getData();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return userInfo;
+    }
 }

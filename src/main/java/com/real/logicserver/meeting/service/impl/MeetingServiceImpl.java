@@ -18,7 +18,6 @@ import com.real.logicserver.utils.user.model.OurUserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.lang.model.type.IntersectionType;
 import java.util.List;
 
 /**
@@ -119,6 +118,76 @@ public class MeetingServiceImpl implements MeetingService {
             pageInfoResult.setMsg("query error");
         }
         return pageInfoResult;
+    }
+
+    @Override
+    public Result<PageInfo<MeetingSimpleInfo>> getMyMeetingSimpleInfo(Integer pageNum, Integer pageSize, OurUserInfo ourUserInfo) {
+
+        Result<PageInfo<MeetingSimpleInfo>> pageInfoResult = new Result<>();
+        if (pageNum==null) {
+            pageNum = 0;
+        } else if (pageNum<0) {
+            pageNum = 0;
+        }
+        if (pageSize==null) {
+            pageSize = 3;
+        } else if (pageSize<1) {
+            pageSize = 3;
+        }
+
+        try {
+            PageHelper.startPage(pageSize,pageNum);
+            List<MeetingSimpleInfo> meetingSimpleInfo = meetingDao.getMyMeeting(ourUserInfo.getUserId());
+            PageInfo<MeetingSimpleInfo> meetingSimpleInfos = new PageInfo<>(meetingSimpleInfo);
+            pageInfoResult.setCode(ResultCode.SUCC);
+            pageInfoResult.setMsg("query members successful");
+            pageInfoResult.setData(meetingSimpleInfos);
+        } catch (Exception e) {
+            e.printStackTrace();
+            pageInfoResult.setCode(ResultCode.FAIL);
+            pageInfoResult.setMsg("query error");
+        }
+
+        return pageInfoResult;
+    }
+
+    @Override
+    public Result<PageInfo<MeetingSimpleInfo>> getFriendMeetingSimpleInfo(Integer pageNum, Integer pageSize, OurUserInfo ourUserInfo) {
+
+        Result<PageInfo<MeetingSimpleInfo>> pageInfoResult = new Result<>();
+        if (pageNum==null) {
+            pageNum = 0;
+        } else if (pageNum<0) {
+            pageNum = 0;
+        }
+        if (pageSize==null) {
+            pageSize = 3;
+        } else if (pageSize<1) {
+            pageSize = 3;
+        }
+
+        try {
+            PageHelper.startPage(pageSize,pageNum);
+            List<MeetingSimpleInfo> meetingSimpleInfo = meetingDao.getFriendMeeting(ourUserInfo.getUserId());
+            PageInfo<MeetingSimpleInfo> meetingSimpleInfos = new PageInfo<>(meetingSimpleInfo);
+            pageInfoResult.setCode(ResultCode.SUCC);
+            pageInfoResult.setMsg("query members successful");
+            pageInfoResult.setData(meetingSimpleInfos);
+        } catch (Exception e) {
+            e.printStackTrace();
+            pageInfoResult.setCode(ResultCode.FAIL);
+            pageInfoResult.setMsg("query error");
+        }
+
+        return pageInfoResult;
+    }
+
+    @Override
+    public void updateLogo(Integer mid,String str) {
+        Meeting meeting = new Meeting();
+        meeting.setLogo("http://res.mengxiangjing.com/"+str);
+        meeting.setMeId(mid);
+        meetingMapper.updateByPrimaryKeySelective(meeting);
     }
 
     private boolean isHaveMeeting(Integer mid) {

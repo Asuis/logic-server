@@ -19,5 +19,15 @@
       "name": "wx.pay.notify-url",
       "type": "java.lang.String",
       "description": "Description for wx.pay.notify-url."
+    },
+    {
+      "name": "wx.pay.cert-path",
+      "type": "java.lang.String",
+      "description": "Description for wx.pay.cert-path."
+    },
+    {
+      "name": "wx.pay.key",
+      "type": "java.lang.String",
+      "description": "Description for wx.pay.key."
     }
   ] }

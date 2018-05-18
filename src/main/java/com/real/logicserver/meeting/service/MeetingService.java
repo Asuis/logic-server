@@ -6,6 +6,8 @@ import com.real.logicserver.meeting.dto.MeetingSimpleInfo;
 import com.real.logicserver.meeting.dto.SimpleUserInfo;
 import com.real.logicserver.utils.user.model.OurUserInfo;
 
+import javax.servlet.http.HttpServletRequest;
+
 /**
  * @author asuis
  */
@@ -15,4 +17,10 @@ public interface MeetingService {
     Result<PageInfo<SimpleUserInfo>> getMembersByMeId(Integer meId,Integer pageNum,Integer pageSize);
 
     Result<PageInfo<MeetingSimpleInfo>> getMeetingSimple(Integer pageNum, Integer pageSize);
+
+    Result<PageInfo<MeetingSimpleInfo>> getMyMeetingSimpleInfo(Integer pageNum, Integer pageSize, OurUserInfo ourUserInfo);
+
+    Result<PageInfo<MeetingSimpleInfo>> getFriendMeetingSimpleInfo(Integer pageNum, Integer pageSize, OurUserInfo ourUserInfo);
+
+    void updateLogo(Integer mid,String str);
 }

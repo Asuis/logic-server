@@ -2,11 +2,14 @@ package com.real.logicserver.price;
 
 import com.real.logicserver.dto.Result;
 import com.real.logicserver.price.api.PayApi;
+import com.real.logicserver.price.dto.OrderInfo;
 import com.real.logicserver.price.form.RedPaperForm;
+import com.real.logicserver.price.service.PayService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,16 +26,19 @@ public class PriceController {
 
     private static final Logger log = org.slf4j.LoggerFactory.getLogger(PriceController.class);
 
-    private final PayApi payApi;
+    private final PayService payService;
 
     @Autowired
-    public PriceController(PayApi payApi) {
-        this.payApi = payApi;
+    public PriceController(PayService payService) {
+        this.payService = payService;
     }
 
+
     @PostMapping("/notice")
-    public Result paymentNotice(@RequestBody String str) {
-        return null;
+    public String paymentNotice(HttpServletRequest request) {
+        log.info("msg notice lalalala");
+        return payService.noticePay("");
+
     }
 
     /**
@@ -48,9 +54,8 @@ public class PriceController {
      * 创建红包
      * */
     @PostMapping(value = "/create")
-    public Result createRedPaper(HttpServletRequest request, @RequestBody RedPaperForm redPaperForm) {
-        payApi.unifiedOrder(request);
-        return null;
+    public Result<OrderInfo> createRedPaper(HttpServletRequest request) {
+        return payService.payRedPaper(request);
     }
     /**
      * 发送定向红包

@@ -103,15 +103,8 @@ public class MeetingMemberServiceImpl implements MeetingMemberService {
 			MeetingSigned meetingSigned = new MeetingSigned();
 			meetingSigned.setMeetingId(meetingId);
 			meetingSigned.setPlace("地点");
-			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
-	        String strTime = String.valueOf(new Date(System.currentTimeMillis()));
-	        Date date = null;
-			try {
-				date = format.parse(strTime);
-			} catch (ParseException e) {
-				e.printStackTrace();
-			}    	        
-			meetingSigned.setSignedTime(date);
+
+			meetingSigned.setSignedTime(new Date(System.currentTimeMillis()));
 			meetingSigned.setUserId(userId);
 			meetingSignedMapper.insert(meetingSigned);
 			return meetingSigned;

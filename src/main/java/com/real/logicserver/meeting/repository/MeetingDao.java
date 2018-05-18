@@ -23,4 +23,8 @@ public interface MeetingDao {
     List<SimpleUserInfo> getMembersByMeId(@Param("mid") Integer meId);
 
     List<MeetingSimpleInfo> getMeetingsByQuery();
+
+    List<MeetingSimpleInfo> getMyMeeting(@Param("uid") Integer userId);
+
+    List<MeetingSimpleInfo> getFriendMeeting(@Param("uid") Integer userId);
 }

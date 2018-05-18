@@ -2,6 +2,7 @@ package com.real.logicserver.meeting;
 import com.google.zxing.WriterException;
 import com.real.logicserver.meeting.service.GenerateIdService;
 import com.real.logicserver.meeting.utils.ZxingUtil;
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,6 +16,7 @@ import java.io.IOException;
  */
 @Controller
 @RequestMapping(value = "/v1/m/")
+@Api("会议二维码生成")
 public class QrcodeController {
 
     private final GenerateIdService generateIdService;
@@ -29,7 +31,6 @@ public class QrcodeController {
     public void readZxing(HttpServletResponse response, Integer size, Integer margin, String level,
                           String format, String content, @PathVariable("mid") Integer mid) throws WriterException, IOException {
         Integer width,height;
-        Long sid = generateIdService.generateId();
         if(size == null){
             width = 200;
             height = 200;
@@ -47,7 +48,7 @@ public class QrcodeController {
             format = "gif";
         }
         if(content == null) {
-            content = "https://asuis.mengxiangjing.com/m/show?mid="+sid;
+            content = mid.toString();
         }
         ZxingUtil.createZxing(response, width, height, margin, level, format, content);
     }

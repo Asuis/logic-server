@@ -3,6 +3,7 @@ package com.real.logicserver.utils.user;
 import com.real.logicserver.dto.Result;
 import com.real.logicserver.utils.user.model.OurUserInfo;
 import com.real.logicserver.utils.user.model.PcLoginResult;
+import com.real.logicserver.utils.user.model.UserInfo;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -37,4 +38,6 @@ public interface OurLoginService {
      * @return 返回用户信息
      */
     public OurUserInfo wxCheck(HttpServletRequest request);
+
+    public UserInfo checkWx(HttpServletRequest request);
 }

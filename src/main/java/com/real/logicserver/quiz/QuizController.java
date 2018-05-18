@@ -1,8 +1,11 @@
 package com.real.logicserver.quiz;
 
 import com.real.logicserver.dto.Result;
+import com.real.logicserver.quiz.model.mongo.Questions;
+import com.real.logicserver.quiz.service.QuestionService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -18,9 +21,17 @@ import javax.servlet.http.HttpServletRequest;
 @RequestMapping("/v1/quiz")
 public class QuizController {
 
+    private final QuestionService questionService;
+
+    @Autowired
+    public QuizController(QuestionService questionService) {
+        this.questionService = questionService;
+    }
+
     @PostMapping("/create")
     @ApiOperation("创建调查问卷")
-    public Result createQuiz(HttpServletRequest request){
+    public Result createQuiz(HttpServletRequest request, @RequestBody Questions questions){
+
         return null;
     }
     /**
