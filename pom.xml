@@ -146,6 +146,14 @@
 			<artifactId>WXPay-SDK-Java</artifactId>
 			<version>0.0.4</version>
 		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.gitlab/java-gitlab-api -->
+		<dependency>
+			<groupId>org.gitlab</groupId>
+			<artifactId>java-gitlab-api</artifactId>
+			<version>4.0.0</version>
+		</dependency>
+
 		<!-- https://mvnrepository.com/artifact/com.google.zxing/core -->
 		<dependency>
 			<groupId>com.google.zxing</groupId>

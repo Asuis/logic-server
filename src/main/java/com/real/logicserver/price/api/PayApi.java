@@ -20,7 +20,6 @@ import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -52,7 +51,6 @@ public class PayApi {
 
         WXPay wxPay = new WXPay(wxPayConfig);
 
-
         HashMap<String,String> data = new HashMap<>();
 
         data.put("openid", openId);
@@ -68,7 +66,7 @@ public class PayApi {
         data.put("spbill_create_ip",ip);
 
 //        data.put("notify_url","https://asuis.mengxiangjing.com/logic-server/v1/pay/notice");
-        data.put("notify_url","https://asuis.mynatapp.cc/v1/pay/notice/");
+        data.put("notify_url","http://asuis.mynatapp.cc/v1/pay/notice/");
         data.put("trade_type","JSAPI");
 
         data.put("product_id", PayType.REDP);
@@ -112,8 +110,6 @@ public class PayApi {
                     orderInfo.setPackage(map.get("package"));
                     orderInfo.setSignType(map.get("signType"));
 
-
-
                 }
             }
         }
@@ -139,7 +135,7 @@ public class PayApi {
                 String resultCode=  res.get("result_code");
                 String openId = res.get("openId");
                 String totalFee = res.get("total_fee");
-                String 	transactionId = res.get("transaction_id");
+                String transactionId = res.get("transaction_id");
                 String outTradeNo = res.get("out_trade_no");
                 String timeEnd = res.get("time_end");
             } else {

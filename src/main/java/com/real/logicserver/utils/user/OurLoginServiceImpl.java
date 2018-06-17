@@ -39,7 +39,7 @@ public class OurLoginServiceImpl implements OurLoginService {
             headers.add("X-WX-Encrypted-Data",data);
             headers.add("X-WX-IV",iv);
 
-            HttpEntity<String> httpEntity = new HttpEntity<>(null, headers);
+            HttpEntity<String> httpEntity = new HttpEntity<>("", headers);
 
             Result<LoginResult> result = null;
             ResponseEntity<String> responseEntity = null;

@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
+import java.io.IOException;
 
 /**
  * @author asuis
@@ -34,11 +36,22 @@ public class PriceController {
     }
 
 
-    @PostMapping("/notice")
-    public String paymentNotice(HttpServletRequest request) {
+    @PostMapping(value = "/notice",produces = {"application/xml;charset=UTF-8"})
+    public String paymentNotice(HttpServletRequest request){
         log.info("msg notice lalalala");
+        try {
+            BufferedReader br = request.getReader();
+            String str;
+            StringBuilder wholeStr = new StringBuilder();
+            while((str = br.readLine()) != null){
+                wholeStr.append(str);
+            }
+            log.info(wholeStr.toString());
+            return payService.noticePay(wholeStr.toString());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return payService.noticePay("");
-
     }
 
     /**

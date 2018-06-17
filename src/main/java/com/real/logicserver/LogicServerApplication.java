@@ -18,6 +18,4 @@ public class LogicServerApplication {
 		SpringApplication.run(LogicServerApplication.class, args);
 	}
 
-	
-	
 }
